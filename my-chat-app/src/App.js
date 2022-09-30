@@ -4,22 +4,36 @@ import ConversationsListPage from './pages/ConversationsListPage';
 import ConversationPage from './pages/ConversationPage';
 import NotFoundPage from './pages/NotFoundPage';
 
+import { Container, Row, Navbar } from 'react-bootstrap';
+
 function App() {
   return (
     <BrowserRouter>
-      <div className="App">
-        <header className="App-header">
-          <h1><Link to="/">My Chat</Link>
-          </h1>
-        </header>
-        <main className="App-main">
-          <Routes>
-            <Route path="/" element={<ConversationsListPage/>}></Route>
-            <Route path="/conversations/:conversationId" element={<ConversationPage/>}></Route>
-            <Route path="*" element={<NotFoundPage/>}></Route>
-          </Routes>
-        </main>
-      </div>
+      <Navbar bg="dark" variant="dark">
+        <Container>
+          <Navbar.Brand as={Link} to="/">
+            <img
+              alt=""
+              src="/logo.svg"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />{' '}
+            My Chat
+          </Navbar.Brand>
+        </Container>
+      </Navbar>
+      <Container>
+        <Row>
+          <main>
+            <Routes>
+              <Route path="/" element={<ConversationsListPage/>}></Route>
+              <Route path="/conversations/:conversationId" element={<ConversationPage/>}></Route>
+              <Route path="*" element={<NotFoundPage/>}></Route>
+            </Routes>
+          </main>
+        </Row>
+      </Container>
     </BrowserRouter>
   );
 }
