@@ -1,13 +1,24 @@
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import { ListGroup } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from 'axios';
+
 import NotFoundPage from "./NotFoundPage";
-import conversations from "./conversations-content";
+import MessageList from "../components/MessagesList";
+import PostMessageForm from "../components/PostMessageForm";
 
 function ConversationPage() {
   const params = useParams();
   const conversationId = params.conversationId;
-  const conversation = conversations.find(conversation => conversation.name === conversationId);
+
+  const [conversation, setConversation] = useState({});
+  useEffect(() => {
+    const loadConversation = async () => {
+      const response = await axios.get(`/api/conversation/${conversationId}`);
+      const c = response.data;
+      setConversation(c);
+    }
+    loadConversation();
+  }, [conversationId]);
 
   if(!conversation){
     return <NotFoundPage/>
@@ -16,12 +27,9 @@ function ConversationPage() {
   return (
     <div>
       <h2>{conversation.title}</h2>
-      <ListGroup>
-      {conversation.messages.map((message, i) => (
-        <ListGroup.Item key={i}>{message.sender} : {message.text}</ListGroup.Item>
-      ))}
-      </ListGroup>
-      <Link to="/">Back to conversations</Link>
+      <MessageList messages={conversation.messages}/>
+      <PostMessageForm conversationId={conversationId} onPostMessage={conversation => setConversation(conversation)}/>
+      <p className="mt-3"><Link to="/">Back to conversations</Link></p>
     </div>
   );
 }
